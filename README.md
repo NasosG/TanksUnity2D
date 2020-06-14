@@ -6,7 +6,7 @@ Bones Of Steel is a fun free 2d game about troll tank arena fighting with many g
 # Learn More
 http://bonesofsteel0.000webhostapp.com
 
-## Copyright and License
+# Copyright and License
 
 [![License](images/license-GPL-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
