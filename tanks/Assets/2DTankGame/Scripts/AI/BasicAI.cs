@@ -56,11 +56,15 @@ public class BasicAI : MonoBehaviour
         }
         else Debug.Log(p.error);
     }
-    void UpdatePath() {
-        if (seeker.IsDone()) {
+    
+    void UpdatePath() 
+    {
+        if (seeker.IsDone()) 
+        {
             seeker.StartPath(rb2d.position, target.position, OnPathComplete);
         }
     }
+    
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -118,7 +122,6 @@ public class BasicAI : MonoBehaviour
                 Vector3 dir = target.position - transform.position; //direction of the target relatively to the npc  
                 angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg + 270; //angle needed to move towards the target
                 transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward); //rotate the npc towards the target
-
             }
 
             game.player2Tank.direction = transform.rotation * Vector3.up;
@@ -140,7 +143,5 @@ public class BasicAI : MonoBehaviour
     {
         return Vector2.Distance(transform.position, target.position) <= inRangeDistance;
     }
-
-
 
 }
