@@ -22,45 +22,45 @@ public class TankMultiplayer : MonoBehaviourPunCallbacks
     public KeyCode p1Shoot;
 
     [Header("Stats")]
-	public int id;							//The unique identifier for this player.
-	public int health;						//The current health of the tank.
-	public int maxHealth;					//The maximum health of this tank.
-	public int damage;						//How much damage this tank can do when shooting a projectile.
-	public float moveSpeed;					//How fast the tank can move.
-	public float turnSpeed;					//How fast the tank can turn.
-	public float projectileSpeed;			//How fast the tank's projectiles can move.
-	public float reloadSpeed;				//How many seconds it takes to reload the tank, so that it can shoot again.
-	private float reloadTimer;				//A timer counting up and resets after shooting.
+    public int id;						//The unique identifier for this player.
+    public int health;						//The current health of the tank.
+    public int maxHealth;					//The maximum health of this tank.
+    public int damage;						//How much damage this tank can do when shooting a projectile.
+    public float moveSpeed;					//How fast the tank can move.
+    public float turnSpeed;					//How fast the tank can turn.
+    public float projectileSpeed;                       	//How fast the tank's projectiles can move.
+    public float reloadSpeed;					//How many seconds it takes to reload the tank, so that it can shoot again.
+    private float reloadTimer;					//A timer counting up and resets after shooting.
     public bool collision = false;
     public PhotonView photonView;
     private Vector3 SelfPos;
 
     [HideInInspector]
-	public Vector3 direction;				//The direction that the tank is facing. Used for movement direction.
+    public Vector3 direction;					//The direction that the tank is facing. Used for movement direction.
 
-	[Header("Bools")]
-	public bool canMove;					//Can the tank move if it wants to?
-	public bool canShoot;					//Can the tank shoot if it wants to?
+    [Header("Bools")]
+    public bool canMove;					//Can the tank move if it wants to?
+    public bool canShoot;					//Can the tank shoot if it wants to?
 
-	[Header("Components / Objects")]
-	public Rigidbody2D rig;					//The tank's Rigidbody2D component. 
-	public GameObject projectile;			//The projectile prefab of which the tank can shoot.
-	public GameObject deathParticleEffect;	//The particle effect prefab that plays when the tank dies.
-	public Transform muzzle;				//The muzzle of the tank. This is where the projectile will spawn.
-	public Game game;                       //The Game.cs script, located on the GameManager game object.
+    [Header("Components / Objects")]
+    public Rigidbody2D rig;					//The tank's Rigidbody2D component. 
+    public GameObject projectile;				//The projectile prefab of which the tank can shoot.
+    public GameObject deathParticleEffect;			//The particle effect prefab that plays when the tank dies.
+    public Transform muzzle;					//The muzzle of the tank. This is where the projectile will spawn.
+    public Game game;                       			//The Game.cs script, located on the GameManager game object.
     public GameManager m_game;
-    private AudioSource m_Explosion3;       // The audio source to play when the tank explodes.
-    private AudioSource PEW_SOUND;          // The audio source to play when the tank explodes.
+    private AudioSource m_Explosion3;       			// The audio source to play when the tank explodes.
+    private AudioSource PEW_SOUND;          			// The audio source to play when the tank explodes.
     public GameObject player;
     public GameObject scoreMultiplayer;			        //The text at the top of the screen which displays the score
     public int player1Score = 0;
     public int player2Score = 0;
-    public int respawnDelay = 2;						//The amount of time a player will wait between dying and respawning.
+    public int respawnDelay = 2;				//The amount of time a player will wait between dying and respawning.
     public UI ui;
     private bool gameEnd = false;
 
     void Start ()
-	{
+    {
         //the tank is able to move and shoot in the beginning
         canMove = true;
         canShoot = true;
@@ -106,8 +106,8 @@ public class TankMultiplayer : MonoBehaviourPunCallbacks
         photonView.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
     }
 
-	void Update ()
-	{
+    void Update ()
+    {
         //if only one player is in game
         if (PhotonNetwork.PlayerList.Length < 2) {
             GameObject.Find("MultiplayerWin").GetComponent<Text>().text = "waiting for other players...";
@@ -130,6 +130,7 @@ public class TankMultiplayer : MonoBehaviourPunCallbacks
         }*/
 
     }
+    
     public void SetWinScreen(int winner)
     {
         gameEnd = true;
@@ -151,49 +152,49 @@ public class TankMultiplayer : MonoBehaviourPunCallbacks
     //Called by the Controls.cs script. When a player presses their movement keys, it calls this function
     //sending over a "y" value, set to either 1 or 0, depending if they are moving forward or backwards.
     public void Move (int y)
-	{
-		rig.velocity = direction * y * moveSpeed * Time.deltaTime;	
-	}
+    {
+        rig.velocity = direction * y * moveSpeed * Time.deltaTime;	
+    }
 
-	//Called by the Controls.cs script. When a player presses their turn keys, it calls this function
-	//sending over an "x" value, set to either 1 or 0, depending if they are moving left or right.
-	public void Turn (int x)
-	{
-		transform.Rotate(-Vector3.forward * x * turnSpeed * Time.deltaTime);
-		direction = transform.rotation * Vector3.up;
-	}
+    //Called by the Controls.cs script. When a player presses their turn keys, it calls this function
+    //sending over an "x" value, set to either 1 or 0, depending if they are moving left or right.
+    public void Turn (int x)
+    {
+        transform.Rotate(-Vector3.forward * x * turnSpeed * Time.deltaTime);
+        direction = transform.rotation * Vector3.up;
+    }
 
  
     //the tank shoots the projectile.
     public void Shoot ()
-	{
+    {
         if (reloadTimer >= reloadSpeed) {                                               //Reload time
             FindObjectOfType<AudioManager>().Play("pew");                               //Play pew sound
             GameObject proj = PhotonNetwork.Instantiate("ProjectileSimple", muzzle.transform.position, Quaternion.identity) as GameObject;	//Spawns the projectile at the muzzle
-			Projectile projScript = proj.GetComponent<Projectile>();					//Gets the Projectile.cs component of the projectile object
-			projScript.tankId = id;														//Sets the projectile's tankId, so that it knows which tank it was shot by
-			projScript.damage = damage;													//Sets the projectile's damage
-			projScript.game = game;														
+            Projectile projScript = proj.GetComponent<Projectile>();					//Gets the Projectile.cs component of the projectile object
+            projScript.tankId = id;									//Sets the projectile's tankId, so that it knows which tank it was shot by
+            projScript.damage = damage;									//Sets the projectile's damage
+            projScript.game = game;														
 
-			projScript.rig.velocity = direction * projectileSpeed * Time.deltaTime;		//Makes the projectile move in the same direction that the tank is facing
-			reloadTimer = 0.0f;															//Sets the reloadTimer to 0, so that we can't shoot straight away
-		}
-	}
+	   projScript.rig.velocity = direction * projectileSpeed * Time.deltaTime;		//Makes the projectile move in the same direction that the tank is facing
+	   reloadTimer = 0.0f;									//Sets the reloadTimer to 0, so that we can't shoot straight away
+        }
+    }
 
     //Called when the tank gets hit by a projectile. It sends over a "dmg" value, which is how much health the tank will lose
     public void Damage (int dmg)
-	{
-		if(health - dmg <= 0) {	//If the tank's health will go under 0 when it gets damaged.
-			Die();				//Kill the tank since its health will be under 0.
-		}
+    {
+        if (health - dmg <= 0) {	//If the tank's health will go under 0 when it gets damaged.
+            Die();			//Kill the tank since its health will be under 0.
+        }
         else {					//Otherwise...
-			health -= dmg;		//Subtract the dmg from the tank's health.
-		}
-	}
+            health -= dmg;		//Subtract the dmg from the tank's health.
+        }
+    }
 
     //Called when the tank's health is or under 0.
     public void Die ()
-	{
+    {
         Debug.Log("PhotonNetwork.IsMasterClient" + PhotonNetwork.IsMasterClient);
         if (PhotonNetwork.IsMasterClient && photonView.IsMine) {  //if the tank is player 1
             int current = GetScore(PhotonNetwork.PlayerList[1]) + 1;
@@ -231,19 +232,19 @@ public class TankMultiplayer : MonoBehaviourPunCallbacks
         return 0;
     }
 
-	//Called when the tank has been dead and is ready to rejoin the game.
-	public void Respawn ()
-	{
-		health = maxHealth;
-		transform.position = new Vector3(9,0,0);	//Sets the tank's position to a random spawn point.
-	}
+    //Called when the tank has been dead and is ready to rejoin the game.
+    public void Respawn ()
+    {
+        health = maxHealth;
+        transform.position = new Vector3(9,0,0);	//Sets the tank's position to a random spawn point.
+    }
 
-	//Called when the tank dies, and needs to wait a certain time before respawning.
-	IEnumerator RespawnTimer ()
-	{
-		yield return new WaitForSeconds(respawnDelay);	    //Waits how ever long was set
-		Respawn();											//Respawns the tank.
-	}
+    //Called when the tank dies, and needs to wait a certain time before respawning.
+    IEnumerator RespawnTimer ()
+    {
+        yield return new WaitForSeconds(respawnDelay);		//Waits how ever long was set
+        Respawn();						//Respawns the tank.
+    }
     
     private void checkInput()
     {
